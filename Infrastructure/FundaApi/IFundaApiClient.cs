@@ -2,9 +2,9 @@
 
 namespace Infrastructure.FundaApi
 {
-    public interface IAanbodApi
+    public interface IFundaApiClient
     {
-        Task<AanbodResponceDto> GetAll(int PageNum);
+        Task<AanbodResponceDto> GetAll(int pageNum);
         Task<AanbodResponceDto> GetAllWithTuin(int pageNum);
     }
 }

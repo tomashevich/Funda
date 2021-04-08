@@ -2,9 +2,9 @@
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Domain.Queries.GetAll
+namespace Application.Queries.GetAll
 {
-    public class GetAllDto : IMapFrom<MakelaarsDto>
+    public class GetAllDto : IMapFrom<Makelaars>
     {
         public long MakelaarId { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@ namespace Application.Domain.Queries.GetAll
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<MakelaarsDto, GetAllDto>();
+            profile.CreateMap<Makelaars, GetAllDto>();
         }
     }
 }

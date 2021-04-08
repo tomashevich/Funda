@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Application.Posts.Queries.GetAllPosts;
+
 
 namespace Infrastructure.FundaApi
 {
-    public class FundaApiClient : BaseHttpClient
+    public class FundaApiClient : BaseHttpClient, IFundaApiClient
     {
         //move to configs
         private string _key;
@@ -15,14 +15,13 @@ namespace Infrastructure.FundaApi
         }
 
         public async Task<AanbodResponceDto> GetAll(int pageNum = 1)
-        {
-            //add responce dto
+        {           
             return await Get<AanbodResponceDto>(Endpoints.Aanbod.GetAll(_key,"amsterdam", pageNum, 25));
         }
 
-        //public async Task<CreatePostResponse> CreatePost(CreatePostRequest request)
-        //{
-        //    return await Post<CreatePostResponse>(Endpoints.Aanbod.CreatePost, request);
-        //}
+        public async Task<AanbodResponceDto> GetAllWithTuin(int pageNum = 1)
+        {         
+            return await Get<AanbodResponceDto>(Endpoints.Aanbod.GetAll(_key, "amsterdam/tuin", pageNum, 25));
+        }
     }
 }

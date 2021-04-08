@@ -1,70 +1,95 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Domain;
-using Application.Posts.Queries.GetAllPosts;
+using Application;
+
 using Domain.Entities;
 
 namespace Infrastructure.FundaApi
 {
-    public class MakelaarService : IMakelaarApi
-
+    public class MakelaarService : IMakelaarService
     {
-        private readonly IAanbodApi _client;
-
+        private readonly IAanbodApi _aanbodApiclient;
+        private const int TOP_COUNT = 10;
         public MakelaarService(IAanbodApi client)
         {
-            _client = client;
+            _aanbodApiclient = client;
         }
 
-        public async Task<IEnumerable<MakelaarsDto>> GetAll()
+        public async Task<IEnumerable<Makelaars>> GetAll()
         {
             var storage = new Storage();
 
-            var data = await _client.GetAll(1).ConfigureAwait(false); ;
+            //get first bunch of records to find total page numbers
 
+            //todo: check data not null and so on...
+            var data = await _aanbodApiclient.GetAll(1).ConfigureAwait(false);
             var totalPages = data.Paging?.AantalPaginas;
 
             var tasks = new List<Task>();
 
             tasks.Add(Task.Run(() =>
               {
-                  foreach (var item in data.Objects)
-                  {
-                      storage.TryAdd(new Aanbod { MakelaarId = item.MakelaarId, MakelaarName = item.MakelaarNaam });
-                  }
+                  SendDataIntoStorage(storage, data);
               }));
 
+
+            //retrieve all data that left
             if (totalPages > 1)
             {
                 for (int i = 2; i <= totalPages; i++)
-                {
-                    tasks.Add(ProceedNextBatch(i,  storage));
-                }
+                    tasks.Add(ProceedNextBatch(i, storage,withTuin:false));
             }
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            var result = storage.GetTopMakelaars(10);
+            var result = storage.GetTopMakelaars(TOP_COUNT);
             return result;
         }
 
-
-        private async Task ProceedNextBatch(int pageNum, Storage storage)
+        public async Task<IEnumerable<Makelaars>> GetAllWithTuin()
         {
-            var data = await _client.GetAll(pageNum);
+            var storage = new Storage();
 
-            foreach (var item in data.Objects)
+            //get first bunch of records to find total page numbers
+
+            //todo: check data not null and so on...
+            var data = await _aanbodApiclient.GetAllWithTuin(1).ConfigureAwait(false);
+            var totalPages = data.Paging?.AantalPaginas;
+
+            var tasks = new List<Task>();
+            tasks.Add(Task.Run(() =>
             {
-                storage.TryAdd(new Aanbod { MakelaarId = item.MakelaarId, MakelaarName = item.MakelaarNaam });
+                SendDataIntoStorage(storage, data);
+            }));
+            
+            //retrieve all data that left
+            if (totalPages > 1)
+            {
+                for (int i = 2; i <= totalPages; i++)
+                    tasks.Add(ProceedNextBatch(i, storage, withTuin:true));
             }
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+
+            var result = storage.GetTopMakelaars(TOP_COUNT);
+            return result;
         }
 
-
-        public Task<IEnumerable<GetAllPostsResponse>> GetAllWithTuin()
+        private async Task ProceedNextBatch(int pageNum, Storage storage, bool withTuin)
         {
-            throw new System.NotImplementedException();
-        }
+            AanbodResponceDto data;
+            if (withTuin)
+                data = await _aanbodApiclient.GetAllWithTuin(pageNum).ConfigureAwait(false);
+            else
+                data = await _aanbodApiclient.GetAll(pageNum).ConfigureAwait(false); 
 
-     
+            SendDataIntoStorage(storage, data);
+        }
+       
+        private static void SendDataIntoStorage(Storage storage, AanbodResponceDto data)
+        {
+            foreach (var item in data.Objects)
+                storage.TryAdd(new Aanbod { MakelaarId = item.MakelaarId, MakelaarName = item.MakelaarNaam });
+        }
     }
 }

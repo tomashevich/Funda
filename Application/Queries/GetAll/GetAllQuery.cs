@@ -4,25 +4,23 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 
-namespace Application.Domain.Queries.GetAll
+namespace Application.Queries.GetAll
 {
     public class GetAllQuery : IRequest<IEnumerable<GetAllDto>>
     {
-        public class GetAllQueryHandler : IRequestHandler<GetAllQuery, IEnumerable<GetAllDto>>
+        public class GetAllQueryHandler : IRequestHandler<GetAllWithTuinQuery, IEnumerable<GetAllDto>>
         {
-            private readonly IMakelaarApi _makelaarApi;
+            private readonly IMakelaarService _makelaarApi;
             private readonly IMapper _mapper;
 
-            public GetAllQueryHandler(IMakelaarApi postsApi, IMapper mapper)
+            public GetAllQueryHandler(IMakelaarService postsApi, IMapper mapper)
             {
                 _makelaarApi = postsApi;
                 _mapper = mapper;
             }
             
-            public async Task<IEnumerable<GetAllDto>> Handle(GetAllQuery request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<GetAllDto>> Handle(GetAllWithTuinQuery request, CancellationToken cancellationToken)
             {
-
-                //calculate results here
                 var posts = await _makelaarApi.GetAll();
                 return _mapper.Map<IEnumerable<GetAllDto>>(posts);
             }
