@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Domain.Entities;
 using MediatR;
 
 namespace Application.Queries.GetAll
 {
     public class GetAllQuery : IRequest<IEnumerable<GetAllDto>>
     {
-        public class GetAllQueryHandler : IRequestHandler<GetAllWithTuinQuery, IEnumerable<GetAllDto>>
+        public class GetAllQueryHandler : IRequestHandler<GetAllQuery, IEnumerable<GetAllDto>>
         {
             private readonly IMakelaarService _makelaarApi;
             private readonly IMapper _mapper;
@@ -19,9 +21,17 @@ namespace Application.Queries.GetAll
                 _mapper = mapper;
             }
             
-            public async Task<IEnumerable<GetAllDto>> Handle(GetAllWithTuinQuery request, CancellationToken cancellationToken)
+            public async Task<IEnumerable<GetAllDto>> Handle(GetAllQuery request, CancellationToken cancellationToken)
             {
-                var posts = await _makelaarApi.GetAll();
+                IEnumerable<Makelaars> posts = new List<Makelaars>();
+                try
+                {
+                    posts = await _makelaarApi.GetAll();
+                }
+                catch (Exception ex)
+                {
+                    //add logging
+                }
                 return _mapper.Map<IEnumerable<GetAllDto>>(posts);
             }
         }
