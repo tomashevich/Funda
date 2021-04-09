@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{A681ABB2-817A-406C-805F-D1231660B6C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentation\Presentation.csproj", "{B1DED7E6-E488-4357-8D40-F6FEA94B143D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{CA3BEB24-037E-4A25-89A4-7C120CAF8908}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
@@ -37,10 +35,6 @@ Global
 		{A681ABB2-817A-406C-805F-D1231660B6C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A681ABB2-817A-406C-805F-D1231660B6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A681ABB2-817A-406C-805F-D1231660B6C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1DED7E6-E488-4357-8D40-F6FEA94B143D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1DED7E6-E488-4357-8D40-F6FEA94B143D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1DED7E6-E488-4357-8D40-F6FEA94B143D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1DED7E6-E488-4357-8D40-F6FEA94B143D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB930E34-1B0F-45E8-BF6B-791F85050A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB930E34-1B0F-45E8-BF6B-791F85050A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB930E34-1B0F-45E8-BF6B-791F85050A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
