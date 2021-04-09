@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{FB930E34-1B0F-45E8-BF6B-791F85050A1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{FB930E34-1B0F-45E8-BF6B-791F85050A1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{7BB2E234-3207-49DB-86D5-FF639E80E3A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{FB930E34-1B0F-45E8-BF6B-791F85050A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB930E34-1B0F-45E8-BF6B-791F85050A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB930E34-1B0F-45E8-BF6B-791F85050A1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BB2E234-3207-49DB-86D5-FF639E80E3A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BB2E234-3207-49DB-86D5-FF639E80E3A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BB2E234-3207-49DB-86D5-FF639E80E3A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BB2E234-3207-49DB-86D5-FF639E80E3A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
