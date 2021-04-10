@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public class Makelaars
+    public class Makelaar
     {
         public long MakelaarId { get; set; }
         public string Name { get; set; }

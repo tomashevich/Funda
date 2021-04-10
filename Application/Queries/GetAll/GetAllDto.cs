@@ -1,20 +1,21 @@
 ﻿using Application.Common.Mappings;
 using AutoMapper;
 using Domain.Entities;
+using System.Collections.Generic;
 
 namespace Application.Queries.GetAll
 {
-    public class GetAllDto : IMapFrom<Makelaars>
+    public class GetAllDto : IMapFrom<MakelaarsResponceDto>
     {
-        public long MakelaarId { get; set; }
-        public string Name { get; set; }
-        public int NumOfProposals { get; set; }
-     
-       
+        public List<Makelaar> Makelaars { get; set; }
+
+        public int RecordsProceeded { get; set; }
+
+        public int TotalRecords { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Makelaars, GetAllDto>();
+             profile.CreateMap<MakelaarsResponceDto, GetAllDto>();
         }
     }
 }

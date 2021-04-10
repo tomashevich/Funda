@@ -8,7 +8,7 @@ namespace Application
 {
     public interface IMakelaarService
     {
-        Task<IEnumerable<Makelaars>> GetAll();
-        Task<IEnumerable<Makelaars>> GetAllWithTuin();
+        Task<MakelaarsResponceDto> GetAll();
+        Task<MakelaarsResponceDto> GetAllWithTuin();
     }
 }

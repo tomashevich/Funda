@@ -15,63 +15,82 @@ namespace Infrastructure.FundaApi
             _aanbodApiclient = client;
         }
 
-        public async Task<IEnumerable<Makelaars>> GetAll()
+        public async Task<MakelaarsResponceDto> GetAll()
         {
             var storage = new Storage();
 
             //get first bunch of records to find total page numbers
 
             //todo: check data not null and so on...
-            var data = await _aanbodApiclient.GetAll(1).ConfigureAwait(false);
-            var totalPages = data.Paging?.AantalPaginas;
-
-            var tasks = new List<Task>();
-
-            tasks.Add(Task.Run(() =>
-              {
-                  SendDataIntoStorage(storage, data);
-              }));
-
-
-            //retrieve all data that left
-            if (totalPages > 1)
+            try
             {
-                for (int i = 2; i <= totalPages; i++)
-                    tasks.Add(ProceedNextBatch(i, storage,withTuin:false));
+                var data = await _aanbodApiclient.GetAll(1).ConfigureAwait(false);
+                var totalPages = data.Paging?.AantalPaginas;
+                storage.TotalRecords = data.TotaalAantalObjecten;
+
+                var tasks = new List<Task>();
+
+                tasks.Add(Task.Run(() =>
+                  {
+                      SendDataIntoStorage(storage, data);
+                  }));
+
+
+                //retrieve all data that left
+                if (totalPages > 1)
+                {
+                    for (int i = 2; i <= totalPages; i++)
+                        tasks.Add(ProceedNextBatch(i, storage, withTuin: false));
+                }
+
+                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-
-            var result = storage.GetTopMakelaars(TOP_COUNT);
+            catch { }
+            var result = new MakelaarsResponceDto
+            {
+                Makelaars = storage.GetTopMakelaars(TOP_COUNT),
+                RecordsProceeded = storage.RecordsProceeded,
+                TotalRecords = storage.TotalRecords
+            };
             return result;
         }
 
-        public async Task<IEnumerable<Makelaars>> GetAllWithTuin()
+        public async Task<MakelaarsResponceDto> GetAllWithTuin()
         {
             var storage = new Storage();
 
             //get first bunch of records to find total page numbers
 
-            //todo: check data not null and so on...
-            var data = await _aanbodApiclient.GetAllWithTuin(1).ConfigureAwait(false);
-            var totalPages = data.Paging?.AantalPaginas;
 
-            var tasks = new List<Task>();
-            tasks.Add(Task.Run(() =>
+            try
             {
-                SendDataIntoStorage(storage, data);
-            }));
-            
-            //retrieve all data that left
-            if (totalPages > 1)
-            {
-                for (int i = 2; i <= totalPages; i++)
-                    tasks.Add(ProceedNextBatch(i, storage, withTuin:true));
+                //todo: check data not null and so on...
+                var data = await _aanbodApiclient.GetAllWithTuin(1).ConfigureAwait(false);
+                var totalPages = data.Paging?.AantalPaginas;
+                storage.TotalRecords = data.TotaalAantalObjecten;
+
+                var tasks = new List<Task>();
+                tasks.Add(Task.Run(() =>
+                {
+                    SendDataIntoStorage(storage, data);
+                }));
+
+                //retrieve all data that left
+                if (totalPages > 1)
+                {
+                    for (int i = 2; i <= totalPages; i++)
+                        tasks.Add(ProceedNextBatch(i, storage, withTuin: true));
+                }
+
+                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-
-            var result = storage.GetTopMakelaars(TOP_COUNT);
+            catch { }
+            var result = new MakelaarsResponceDto
+            {
+                Makelaars = storage.GetTopMakelaars(TOP_COUNT),
+                RecordsProceeded = storage.RecordsProceeded,
+                TotalRecords = storage.TotalRecords
+            };
             return result;
         }
 
