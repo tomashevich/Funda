@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.FundaApi
 {
@@ -9,9 +11,11 @@ namespace Infrastructure.FundaApi
     {
         private readonly IAanbodApi _aanbodApiclient;
         private const int TOP_COUNT = 10;
-        public MakelaarService(IAanbodApi client)
+        private readonly ILogger<MakelaarService> _logger;
+        public MakelaarService(IAanbodApi client, ILogger<MakelaarService> logger)
         {
             _aanbodApiclient = client;
+            _logger = logger;
         }
 
         public async Task<MakelaarsResponceDto> GetAll(bool withTuin = false)
@@ -46,7 +50,10 @@ namespace Infrastructure.FundaApi
 
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-            catch { /* todo: logs can be addded*/}
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception: {e.Message}.  Inner Exception: {e.InnerException}" );
+            }
 
             var result = new MakelaarsResponceDto
             {

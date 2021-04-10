@@ -1,0 +1,5 @@
+2021-04-10 23:45:39.6008 Info Message Template Auto Format enabled
+2021-04-10 23:45:39.6348 Info Loading assembly: NLog.Web.AspNetCore
+2021-04-10 23:45:39.7193 Info Adding target FileTarget(Name=alldata)
+2021-04-10 23:45:39.7356 Info Adding target FileTarget(Name=otherFile-web)
+2021-04-10 23:45:39.7884 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\serge\source\repos\Funda\Web\bin\Debug\netcoreapp3.1\nlog.config
