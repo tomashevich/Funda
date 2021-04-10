@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application;
-
 using Domain.Entities;
 
 namespace Infrastructure.FundaApi
@@ -15,16 +14,19 @@ namespace Infrastructure.FundaApi
             _aanbodApiclient = client;
         }
 
-        public async Task<MakelaarsResponceDto> GetAll()
+        public async Task<MakelaarsResponceDto> GetAll(bool withTuin = false)
         {
             var storage = new Storage();
 
-            //get first bunch of records to find total page numbers
-
-            //todo: check data not null and so on...
             try
             {
-                var data = await _aanbodApiclient.GetAll(1).ConfigureAwait(false);
+                //get first bunch of records to find total page numbers
+                AanbodResponceDto data;
+                if (!withTuin)
+                    data = await _aanbodApiclient.GetAll(1).ConfigureAwait(false);
+                else
+                    data = await _aanbodApiclient.GetAllWithTuin(1).ConfigureAwait(false);
+
                 var totalPages = data.Paging?.AantalPaginas;
                 storage.TotalRecords = data.TotaalAantalObjecten;
 
@@ -35,56 +37,17 @@ namespace Infrastructure.FundaApi
                       SendDataIntoStorage(storage, data);
                   }));
 
-
                 //retrieve all data that left
                 if (totalPages > 1)
                 {
                     for (int i = 2; i <= totalPages; i++)
-                        tasks.Add(ProceedNextBatch(i, storage, withTuin: false));
+                        tasks.Add(ProceedNextBatch(i, storage, withTuin));
                 }
 
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-            catch { }
-            var result = new MakelaarsResponceDto
-            {
-                Makelaars = storage.GetTopMakelaars(TOP_COUNT),
-                RecordsProceeded = storage.RecordsProceeded,
-                TotalRecords = storage.TotalRecords
-            };
-            return result;
-        }
+            catch { /* todo: logs can be addded*/}
 
-        public async Task<MakelaarsResponceDto> GetAllWithTuin()
-        {
-            var storage = new Storage();
-
-            //get first bunch of records to find total page numbers
-
-
-            try
-            {
-                //todo: check data not null and so on...
-                var data = await _aanbodApiclient.GetAllWithTuin(1).ConfigureAwait(false);
-                var totalPages = data.Paging?.AantalPaginas;
-                storage.TotalRecords = data.TotaalAantalObjecten;
-
-                var tasks = new List<Task>();
-                tasks.Add(Task.Run(() =>
-                {
-                    SendDataIntoStorage(storage, data);
-                }));
-
-                //retrieve all data that left
-                if (totalPages > 1)
-                {
-                    for (int i = 2; i <= totalPages; i++)
-                        tasks.Add(ProceedNextBatch(i, storage, withTuin: true));
-                }
-
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-            }
-            catch { }
             var result = new MakelaarsResponceDto
             {
                 Makelaars = storage.GetTopMakelaars(TOP_COUNT),
@@ -100,11 +63,11 @@ namespace Infrastructure.FundaApi
             if (withTuin)
                 data = await _aanbodApiclient.GetAllWithTuin(pageNum).ConfigureAwait(false);
             else
-                data = await _aanbodApiclient.GetAll(pageNum).ConfigureAwait(false); 
+                data = await _aanbodApiclient.GetAll(pageNum).ConfigureAwait(false);
 
             SendDataIntoStorage(storage, data);
         }
-       
+
         private static void SendDataIntoStorage(Storage storage, AanbodResponceDto data)
         {
             foreach (var item in data.Objects)

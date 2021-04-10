@@ -1,14 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Domain.Entities;
+﻿using System.Threading.Tasks;
 
 namespace Application
-
 {
     public interface IMakelaarService
     {
-        Task<MakelaarsResponceDto> GetAll();
-        Task<MakelaarsResponceDto> GetAllWithTuin();
+        Task<MakelaarsResponceDto> GetAll(bool withTuin);
     }
 }

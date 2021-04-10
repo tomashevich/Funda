@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 
 namespace Application.Queries.GetAll
@@ -20,12 +17,10 @@ namespace Application.Queries.GetAll
                 _makelaarApi = postsApi;
                 _mapper = mapper;
             }
-            
+
             public async Task<GetAllDto> Handle(GetAllWithTuinQuery request, CancellationToken cancellationToken)
             {
-               
-                  var result = await _makelaarApi.GetAllWithTuin();
-             
+                var result = await _makelaarApi.GetAll(true);
                 return _mapper.Map<GetAllDto>(result);
             }
         }

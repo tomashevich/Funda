@@ -26,6 +26,7 @@ namespace Tests
             {
                 result[i].NumOfProposals.ShouldBe(10-i);
             }
+            storage.RecordsProceeded.ShouldBe(55);
         }
 
         private static void SendDataIntoStorage(Storage storage, long id)
