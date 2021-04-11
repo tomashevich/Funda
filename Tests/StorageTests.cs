@@ -10,7 +10,7 @@ namespace Tests
         public  void Storage_should_count_correctly()
         {
             //arrange
-            var storage = new Storage();
+            var storage = new Counter();
 
             for (var i = 0; i < 10; i++)
             {
@@ -29,7 +29,7 @@ namespace Tests
             storage.RecordsProceeded.ShouldBe(55);
         }
 
-        private static void SendDataIntoStorage(Storage storage, long id)
+        private static void SendDataIntoStorage(Counter storage, long id)
         {
             for (var i = 30-id; i<=30; i++)
                 storage.TryAdd(new Aanbod { MakelaarId = 30 - id, MakelaarName = $"MakelaarNaam_{30 - id}"});

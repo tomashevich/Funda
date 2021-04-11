@@ -20,7 +20,7 @@ namespace Infrastructure.FundaApi
 
         public async Task<MakelaarsResponceDto> GetAll(bool withTuin = false)
         {
-            var storage = new Storage();
+            var storage = new Counter();
 
             try
             {
@@ -64,7 +64,7 @@ namespace Infrastructure.FundaApi
             return result;
         }
 
-        private async Task ProceedNextBatch(int pageNum, Storage storage, bool withTuin)
+        private async Task ProceedNextBatch(int pageNum, Counter storage, bool withTuin)
         {
             AanbodResponceDto data;
             if (withTuin)
@@ -75,7 +75,7 @@ namespace Infrastructure.FundaApi
             SendDataIntoStorage(storage, data);
         }
 
-        private static void SendDataIntoStorage(Storage storage, AanbodResponceDto data)
+        private static void SendDataIntoStorage(Counter storage, AanbodResponceDto data)
         {
             foreach (var item in data.Objects)
                 storage.TryAdd(new Aanbod { MakelaarId = item.MakelaarId, MakelaarName = item.MakelaarNaam });

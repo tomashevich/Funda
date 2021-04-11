@@ -5,9 +5,9 @@ using System.Threading;
 
 namespace Domain.Entities
 {
-    public class Storage
+    public class Counter
     {
-        public Storage()
+        public Counter()
         {
             Makelaars = new ConcurrentDictionary<long, Item>();
         }
